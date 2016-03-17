@@ -20,6 +20,7 @@ import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Paciente;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
 import edu.eci.pdsw.samples.services.ServiciosPacientes;
+import edu.eci.pdsw.samples.services.ServiciosPacientesPropio;
 import edu.eci.pdsw.samples.services.ServiciosPacientesStub;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class ConsultasTest {
      */
     @Test
     public void registroPacienteTest(){
-        ServiciosPacientes sp = new ServiciosPacientesStub();
+        ServiciosPacientes sp = new ServiciosPacientesPropio();
         Consulta consul1 = new Consulta(null,"primera consulta paciente");
         Paciente p = new Paciente(1234,"CC","Pepito Perez",null);
         /**

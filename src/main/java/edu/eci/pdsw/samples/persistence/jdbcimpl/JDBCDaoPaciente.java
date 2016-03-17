@@ -28,8 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,20 +112,53 @@ public class JDBCDaoPaciente implements DaoPaciente {
                 int res = ps.executeUpdate();
             }
         } catch (SQLException e){
-            e.printStackTrace();
-            throw new PersistenceException("Paciente ya existente");
+            //e.printStackTrace();
+            //throw new PersistenceException("Paciente ya existente");
         }
     }
 
     @Override
     public void update(Paciente p) throws PersistenceException {
-        PreparedStatement ps;
-        /*try {
+        PreparedStatement ps=null;
+        try {
+            Paciente comp = load(p.getId(),p.getTipo_id());
+            if(comp.equals(p)){
+                for (Consulta c : p.getConsultas()) {
+                    String consultaSQL="UPDATE CONSULTAS SET fecha_y_hora=?,resumen=?,PACIENTES_id=?,PACIENTES_id=? "
+                        + "WHERE PACIENTES_id=?,PACIENTES_id=?";
+                    ps = con.prepareCall(consultaSQL);
+                    ps.setDate(1, (Date) c.getFechayHora());
+                    ps.setString(2,c.getResumen());
+                    ps.setInt(3,p.getId());
+                    ps.setString(4,p.getTipo_id());
+                    ps.setInt(5,p.getId());
+                    ps.setString(6,p.getTipo_id());
+                    int res = ps.executeUpdate();
+                }
+            }
             
-        } catch (SQLException ex) {
-            throw new PersistenceException("An error ocurred while loading a product.",ex);
-        } */
-        throw new RuntimeException("No se ha implementado el metodo 'load' del DAOPAcienteJDBC");
+        } catch (Exception ex) {
+            
+        } 
+        
+    }
+
+    @Override
+    public List<Paciente> cargarPacientes() throws PersistenceException {
+        List<Paciente>lista = new ArrayList<>();
+        try{
+            PreparedStatement ps = null;
+            con.setAutoCommit(false);
+            String consulta = "SELECT * FROM PACIENTES";
+            ps=con.prepareCall(consulta);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Paciente(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4)));
+            }            
+        }catch(SQLException e){
+        
+        }
+        return lista;
     }
     
 }
