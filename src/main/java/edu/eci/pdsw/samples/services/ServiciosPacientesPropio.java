@@ -36,7 +36,7 @@ public class ServiciosPacientesPropio extends ServiciosPacientes{
         
         try{
             //input = ServiciosPacientes.class.getResource("applicationconfig.properties").openStream();
-            input=ServiciosPacientes.class.getResource("applicationconfig_Test.properties").openStream();
+            input=ServiciosPacientes.class.getResource("applicationconfig.properties").openStream();
             properties=new Properties();
             System.out.println("Paso 2");
             properties.load(input);
